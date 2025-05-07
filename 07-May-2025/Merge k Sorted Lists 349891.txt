@@ -1,0 +1,69 @@
+# Problem: Merge k Sorted Lists - https://leetcode.com/problems/merge-k-sorted-lists/
+
+class ListNode {
+    constructor(val = 0, next = null) {
+        this.val = val;
+        this.next = next;
+    }
+}
+
+function mergeKLists(lists) {
+    if (!lists || lists.length === 0) return null;
+
+    // Helper function to merge two sorted linked lists
+    function mergeTwoLists(l1, l2) {
+        const dummy = new ListNode();
+        let current = dummy;
+
+        while (l1 && l2) {
+            if (l1.val < l2.val) {
+                current.next = l1;
+                l1 = l1.next;
+            } else {
+                current.next = l2;
+                l2 = l2.next;
+            }
+            current = current.next;
+        }
+
+        current.next = l1 || l2; // Append the remaining list
+        return dummy.next;
+    }
+
+    // Recursively merge lists using divide-and-conquer
+    function merge(lists, start, end) {
+        if (start === end) return lists[start];
+        const mid = Math.floor((start + end) / 2);
+        const left = merge(lists, start, mid);
+        const right = merge(lists, mid + 1, end);
+        return mergeTwoLists(left, right);
+    }
+
+    return merge(lists, 0, lists.length - 1);
+}
+
+// Example usage
+function arrayToList(arr) {
+    const dummy = new ListNode();
+    let current = dummy;
+    for (const val of arr) {
+        current.next = new ListNode(val);
+        current = current.next;
+    }
+    return dummy.next;
+}
+
+function listToArray(list) {
+    const result = [];
+    while (list) {
+        result.push(list.val);
+        list = list.next;
+    }
+    return result;
+}
+
+const lists = [
+    arrayToList([1, 4, 5]),
+    arrayToList([1, 3, 4]),
+    arrayToList([2, 6]),
+];
