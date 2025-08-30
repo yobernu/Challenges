@@ -1,0 +1,32 @@
+# Problem: Valid Sudoku - https://leetcode.com/problems/valid-sudoku/
+
+const isValidSudoku = (board) => {
+    // Create sets to store seen numbers for rows, columns, and sub-boxes
+    const rows = new Array(9).fill(0).map(() => new Set());
+    const cols = new Array(9).fill(0).map(() => new Set());
+    const boxes = new Array(9).fill(0).map(() => new Set());
+
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            const num = board[i][j];
+
+            // Skip empty cells
+            if (num === '.') continue;
+
+            // Calculate the index for the 3x3 sub-box
+            const boxIndex = Math.floor(i / 3) * 3 + Math.floor(j / 3);
+
+            // Check for duplicates in the current row, column, or box
+            if (rows[i].has(num) || cols[j].has(num) || boxes[boxIndex].has(num)) {
+                return false;
+            }
+
+            // Add the number to the respective sets
+            rows[i].add(num);
+            cols[j].add(num);
+            boxes[boxIndex].add(num);
+        }
+    }
+
+    return true; // If no duplicates found, the board is valid
+};
